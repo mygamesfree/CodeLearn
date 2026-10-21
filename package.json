@@ -1,0 +1,14 @@
+{
+  "name": "codelearn",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CodeLearn — free beginner courses in HTML, CSS and JavaScript.",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/validate.mjs",
+    "serve": "python3 -m http.server 8000"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0"
+  }
+}

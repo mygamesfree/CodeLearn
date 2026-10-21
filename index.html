@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CodeLearn — free beginner courses in HTML, CSS and JavaScript with live examples, exercises and progress tracking.">
+  <title>CodeLearn · Learn Web Development Step by Step</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f46e5'/%3E%3Cpath d='M12 10L6 16l6 6M20 10l6 6-6 6' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a class="logo" href="index.html" aria-label="CodeLearn home">
+        <span class="logo-mark" aria-hidden="true">&lt;/&gt;</span>
+        <span>CodeLearn</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="navigation" id="primary-nav" aria-label="Primary">
+        <a href="index.html" data-nav="home">Home</a>
+        <a href="courses.html" data-nav="courses">Courses</a>
+        <a href="exercises.html" data-nav="exercises">Exercises</a>
+        <a href="about.html" data-nav="about">About</a>
+      </nav>
+      <div class="navbar-actions">
+        <button class="icon-btn" type="button" data-open-search aria-label="Search lessons (press slash to focus)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+        </button>
+        <div class="auth-actions" data-auth-actions>
+          <a href="login.html" class="btn btn-ghost">Log in</a>
+          <a href="register.html" class="btn btn-primary">Sign up</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="search-modal" id="search-modal" hidden role="dialog" aria-modal="true" aria-label="Search CodeLearn">
+    <div class="search-panel">
+      <div class="search-form">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+        <input class="search-input" type="search" placeholder="Search lessons, topics, courses…" aria-label="Search lessons" autocomplete="off">
+        <button class="btn btn-ghost" type="button" data-close-search>Close</button>
+      </div>
+      <ul class="search-results"></ul>
+      <div class="search-footer">
+        <span><kbd>Enter</kbd> full results · <kbd>Esc</kbd> close</span>
+        <span><kbd>/</kbd> to search</span>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <p class="eyebrow">CodeLearn • Web Development</p>
+          <h1>Learn Web Development</h1>
+          <span class="hero-subtitle">Step by Step</span>
+          <p class="hero-description">
+            HTML, CSS and JavaScript with clear explanations, live editable examples
+            and hands-on exercises — built for complete beginners.
+          </p>
+          <div class="hero-actions">
+            <a href="course.html?id=html" class="btn btn-primary btn-lg">Start learning now →</a>
+            <a href="courses.html" class="btn btn-outline btn-lg">View all courses</a>
+          </div>
+          <div class="hero-stats">
+            <div><strong data-stat-lessons>17</strong> lessons</div>
+            <div><strong data-stat-exercises>17</strong> exercises</div>
+            <div><strong data-stat-progress>0</strong> completed by you</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section home-courses" aria-labelledby="courses-title">
+      <div class="container">
+        <div class="home-courses-head">
+          <h2 id="courses-title">Our courses</h2>
+          <a href="courses.html">View all courses →</a>
+        </div>
+        <div class="grid grid-3" id="home-course-grid">
+          <!-- Course cards are rendered by js/pages/home.js -->
+          <div class="skeleton" style="height:220px"></div>
+          <div class="skeleton" style="height:220px"></div>
+          <div class="skeleton" style="height:220px"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="why-title">
+      <div class="container">
+        <div class="section-title">
+          <h2 id="why-title">Why choose CodeLearn?</h2>
+          <p>Everything you need to go from zero to your first real web page.</p>
+        </div>
+        <div class="grid grid-4">
+          <article class="feature">
+            <div class="feature-icon" aria-hidden="true">▶</div>
+            <h3>Clear lessons</h3>
+            <p>Simple, step-by-step explanations with readable examples.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" aria-hidden="true">✎</div>
+            <h3>Live playgrounds</h3>
+            <p>Edit HTML, CSS and JavaScript right in the browser and see results instantly.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" aria-hidden="true">✓</div>
+            <h3>Practical exercises</h3>
+            <p>Check your understanding with instant feedback and scores.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" aria-hidden="true">▥</div>
+            <h3>Progress tracking</h3>
+            <p>See how far you have come at every stage — stored as you learn.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-banner">
+          <div>
+            <h2>Ready to write your first line of code?</h2>
+            <p>Start with the HTML course — no install, no account required.</p>
+          </div>
+          <a href="course.html?id=html" class="btn btn-lg">Begin the HTML course →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <a class="logo" href="index.html" aria-label="CodeLearn home">
+          <span class="logo-mark" aria-hidden="true">&lt;/&gt;</span>
+          <span>CodeLearn</span>
+        </a>
+        <p style="margin-top:0.5rem">Learning today, building tomorrow.</p>
+      </div>
+      <nav aria-label="Footer courses">
+        <h4>Learn</h4>
+        <div class="footer-links">
+          <a href="courses.html">All courses</a>
+          <a href="course.html?id=html">HTML course</a>
+          <a href="course.html?id=css">CSS course</a>
+          <a href="course.html?id=js">JavaScript course</a>
+        </div>
+      </nav>
+      <nav aria-label="Footer account">
+        <h4>Account</h4>
+        <div class="footer-links">
+          <a href="login.html">Log in</a>
+          <a href="register.html">Sign up</a>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="about.html">About</a>
+        </div>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CodeLearn — free web development lessons.</span>
+      <span>Built with vanilla HTML, CSS &amp; JavaScript.</span>
+    </div>
+  </footer>
+
+  <div class="toast-region" aria-live="polite"></div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

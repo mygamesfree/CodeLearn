@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="CodeLearn — free beginner courses in HTML, CSS and JavaScript with live examples, exercises and progress tracking.">
   <title>CodeLearn · Learn Web Development Step by Step</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f46e5'/%3E%3Cpath d='M12 10L6 16l6 6M20 10l6 6-6 6' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2339ff14'/%3E%3Cpath d='M12 10L6 16l6 6M20 10l6 6-6 6' stroke='%23031003' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="home">
@@ -25,6 +25,7 @@
         <a href="index.html" data-nav="home">Home</a>
         <a href="courses.html" data-nav="courses">Courses</a>
         <a href="exercises.html" data-nav="exercises">Exercises</a>
+        <a href="projects.html" data-nav="projects">Projects</a>
         <a href="about.html" data-nav="about">About</a>
       </nav>
       <div class="navbar-actions">
@@ -62,16 +63,18 @@
           <h1>Learn Web Development</h1>
           <span class="hero-subtitle">Step by Step</span>
           <p class="hero-description">
-            HTML, CSS and JavaScript with clear explanations, live editable examples
-            and hands-on exercises — built for complete beginners.
+            HTML, CSS and JavaScript learning paths with clear explanations, live editable
+            examples, hands-on exercises and real projects — built for complete beginners
+            and growing developers.
           </p>
           <div class="hero-actions">
             <a href="course.html?id=html" class="btn btn-primary btn-lg">Start learning now →</a>
-            <a href="courses.html" class="btn btn-outline btn-lg">View all courses</a>
+            <a href="projects.html" class="btn btn-outline btn-lg">Explore projects</a>
           </div>
           <div class="hero-stats">
-            <div><strong data-stat-lessons>17</strong> lessons</div>
-            <div><strong data-stat-exercises>17</strong> exercises</div>
+            <div><strong data-stat-lessons>63</strong> lessons</div>
+            <div><strong data-stat-exercises>63</strong> exercises</div>
+            <div><strong data-stat-projects>11</strong> projects</div>
             <div><strong data-stat-progress>0</strong> completed by you</div>
           </div>
         </div>
@@ -93,13 +96,52 @@
       </div>
     </section>
 
+    <section class="section" aria-labelledby="path-title">
+      <div class="container">
+        <div class="section-title">
+          <h2 id="path-title">A clear learning path</h2>
+          <p>Start with structure, add style, then make it interactive — and finish with a real build.</p>
+        </div>
+        <div class="grid grid-3 path-grid">
+          <article class="card path-card">
+            <span class="path-step">01</span>
+            <h3>Structure with HTML</h3>
+            <p>Build pages with semantic markup, accessible forms and real content.</p>
+            <a href="course.html?id=html">Start the HTML path →</a>
+          </article>
+          <article class="card path-card">
+            <span class="path-step">02</span>
+            <h3>Style with CSS</h3>
+            <p>Design polished, responsive interfaces with modern layout and theming.</p>
+            <a href="course.html?id=css">Start the CSS path →</a>
+          </article>
+          <article class="card path-card">
+            <span class="path-step">03</span>
+            <h3>Build with JavaScript</h3>
+            <p>Add logic, DOM interactivity, storage and async data to your pages.</p>
+            <a href="course.html?id=js">Start the JavaScript path →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="projects-title">
+      <div class="container">
+        <div class="home-courses-head">
+          <h2 id="projects-title">Projects that grow with you</h2>
+          <a href="projects.html">View all projects →</a>
+        </div>
+        <div class="grid grid-4" id="home-project-grid"></div>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="why-title">
       <div class="container">
         <div class="section-title">
           <h2 id="why-title">Why choose CodeLearn?</h2>
           <p>Everything you need to go from zero to your first real web page.</p>
         </div>
-        <div class="grid grid-4">
+        <div class="grid feature-grid">
           <article class="feature">
             <div class="feature-icon" aria-hidden="true">▶</div>
             <h3>Clear lessons</h3>
@@ -119,6 +161,11 @@
             <div class="feature-icon" aria-hidden="true">▥</div>
             <h3>Progress tracking</h3>
             <p>See how far you have come at every stage — stored as you learn.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" aria-hidden="true">⌘</div>
+            <h3>Real projects</h3>
+            <p>Apply what you learn with guided builds, requirements and completion criteria.</p>
           </article>
         </div>
       </div>
@@ -150,6 +197,7 @@
         <h4>Learn</h4>
         <div class="footer-links">
           <a href="courses.html">All courses</a>
+          <a href="projects.html">Projects</a>
           <a href="course.html?id=html">HTML course</a>
           <a href="course.html?id=css">CSS course</a>
           <a href="course.html?id=js">JavaScript course</a>

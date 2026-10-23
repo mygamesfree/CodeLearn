@@ -5,11 +5,16 @@ hand-built with vanilla HTML5, CSS3 and JavaScript modules. No frameworks, no bu
 
 ## Features
 
-- **3 courses · 17 lessons** with beginner-level explanations and code examples
+- **3 structured courses · 63 lessons** from beginner fundamentals through intermediate practice
+- **Learning objectives, practical tasks and summaries** on every lesson
 - **Live playgrounds** on every lesson: edit HTML/CSS/JS in the browser and see results instantly
   (JavaScript lessons get a captured console; DOM lessons run inside a sandboxed iframe)
-- **17 exercises** with three question types (multiple choice, fill-in-the-blank, write-code),
-  instant feedback, per-question explanations, scores and unlimited retries
+- **63 exercises** with three question types (multiple choice, fill-in-the-blank, write-code),
+  including code-reading and debugging questions, instant feedback, per-question explanations,
+  scores and unlimited retries
+- **11 progressively harder projects** with requirements, steps, completion criteria and resources
+- **Developer Neon theme** — dark charcoal surfaces, neon green accent, polished cards and
+  code blocks, responsive layouts and reduced-motion support
 - **Search** across all courses and lessons (header modal with live results + full search page)
 - **Progress tracking** — lesson completion and best exercise scores, stored in the browser and
   synced to your account when Supabase is connected
@@ -36,12 +41,13 @@ python3 -m http.server 8000
 ## Project structure
 
 ```
-index.html … dashboard.html   the pages (each declares <body data-page="…">)
+index.html … update-password.html   the pages (each declares <body data-page="…">)
+projects.html, project.html        project list and single project view
 script.js                     single entry point: loads the right page module
 style.css                     full design system (CSS variables, sections)
 config.js                     Supabase URL + anon key (empty = demo mode)
 js/
-  data.js                     ALL course, lesson and exercise content
+  data.js                     ALL course, lesson, exercise and project content
   ui.js                       DOM helpers, toasts, search modal, mobile nav
   grading.js                  exercise scoring engine (pure functions)
   search.js                   client-side search index
@@ -50,13 +56,15 @@ js/
   progress.js                 progress tracking + Supabase sync
   pages/*.js                  one module per page
 supabase/schema.sql           database schema + Row Level Security policies
-tests/validate.mjs            872 automated checks (node tests/validate.mjs)
+tests/validate.mjs            automated checks (node tests/validate.mjs)
 tests/browser_test.py         80 end-to-end browser tests (Playwright)
 ```
 
-All lesson content lives in **`js/data.js`** — edit that one file to change text,
-add lessons or write new exercises. Every exercise supports automated verification:
-`referenceAnswers()` builds the correct answers and the test suite proves each one scores 100.
+All learning content lives in **`js/data.js`** — edit that one file to change text,
+add lessons, write new exercises or define projects. Every exercise supports automated
+verification: `referenceAnswers()` builds the correct answers and the test suite proves
+each one scores 100. Lesson objectives, practical tasks and takeaways are attached from
+the same file so the lesson page, tests and navigation stay consistent.
 
 ## Connect real accounts (Supabase)
 

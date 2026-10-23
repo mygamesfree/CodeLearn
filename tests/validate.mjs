@@ -20,7 +20,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
-import { COURSES, ALL_LESSONS, ALL_EXERCISES, getCourse, getLesson, LESSON_COUNT, EXERCISE_COUNT } from '../js/data.js';
+import { COURSES, ALL_LESSONS, ALL_EXERCISES, PROJECTS, getCourse, getLesson, getProject, LESSON_COUNT, EXERCISE_COUNT } from '../js/data.js';
 import { gradeExercise, gradeCode, referenceAnswers, normalizeAnswer, passingScore } from '../js/grading.js';
 import { searchLessons, highlightTerms, buildIndex } from '../js/search.js';
 import {
@@ -105,6 +105,39 @@ for (const lesson of ALL_LESSONS) {
   exerciseIds.add(exercise.id);
   check(`exercise "${exercise.id}" has questions`, exercise.questions?.length >= 2);
 }
+
+/* ---------------- 2b. lesson guides & projects ---------------- */
+section('Lesson guides and projects');
+
+for (const lesson of ALL_LESSONS) {
+  check(`lesson "${lesson.id}" has learning objectives`,
+    Array.isArray(lesson.objectives) && lesson.objectives.length >= 2);
+  check(`lesson "${lesson.id}" has practical tasks`,
+    Array.isArray(lesson.tasks) && lesson.tasks.length >= 2);
+  check(`lesson "${lesson.id}" has a summary`,
+    Array.isArray(lesson.takeaways) && lesson.takeaways.length >= 2);
+  check(`lesson "${lesson.id}" order is a positive number`,
+    Number.isInteger(lesson.order) && lesson.order > 0);
+}
+
+check('at least 4 projects', PROJECTS.length >= 4, `found ${PROJECTS.length}`);
+const projectIds = new Set();
+for (const project of PROJECTS) {
+  check(`project "${project.id}" has a unique id`, !projectIds.has(project.id));
+  projectIds.add(project.id);
+  check(`project "${project.id}" has required fields`,
+    Boolean(project.title && project.summary && project.overview && project.level));
+  check(`project "${project.id}" has requirements`,
+    Array.isArray(project.requirements) && project.requirements.length >= 3);
+  check(`project "${project.id}" has steps`,
+    Array.isArray(project.steps) && project.steps.length >= 3);
+  check(`project "${project.id}" has completion criteria`,
+    Array.isArray(project.completionCriteria) && project.completionCriteria.length >= 3);
+  check(`project "${project.id}" is retrievable`, Boolean(getProject(project.id)));
+}
+
+check('every course has at least 6 lessons',
+  COURSES.every((course) => course.lessons.length >= 6));
 
 /* ---------------- 3. exercise grading ---------------- */
 section('Exercise grading');

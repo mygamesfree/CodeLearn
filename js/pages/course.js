@@ -47,7 +47,27 @@ function renderSummary(course) {
     el('div', { className: 'progress-bar' }, [
       el('div', { className: 'progress-fill', attrs: { style: `width: ${percent}%` } }),
     ]),
+    buildProjectCta(course),
   );
+}
+
+function buildProjectCta(course) {
+  const projectMap = {
+    html: 'proj-personal-portfolio',
+    css: 'proj-landing-page',
+    js: 'proj-interactive-quiz',
+  };
+  const projectId = projectMap[course.id];
+  if (!projectId) return el('span');
+
+  return el('div', { className: 'course-project-cta' }, [
+    el('span', { text: 'Apply this path with a guided project.' }),
+    el('a', {
+      className: 'btn btn-outline',
+      text: 'View project →',
+      attrs: { href: `project.html?id=${projectId}` },
+    }),
+  ]);
 }
 
 function renderLessonList(course) {
@@ -55,33 +75,60 @@ function renderLessonList(course) {
   const progress = loadProgress();
   list.innerHTML = '';
 
-  for (const lesson of course.lessons) {
-    const completed = Boolean(progress.completed[lesson.id]);
-    const score = progress.scores[lesson.exercise.id];
+  const modules = course.modules?.length
+    ? course.modules
+    : [{ id: 'all', order: 1, title: 'Lessons', description: '', lessonIds: course.lessons.map((lesson) => lesson.id) }];
 
-    const row = el('a', {
-      className: `lesson-row${completed ? ' is-complete' : ''}`,
-      attrs: { href: `lesson.html?course=${course.id}&id=${lesson.id}` },
-    }, [
-      el('span', {
-        className: 'lesson-status',
-        text: completed ? '✓' : String(lesson.order),
-        attrs: { 'aria-hidden': 'true' },
-      }),
-      el('div', { className: 'lesson-row-body' }, [
-        el('h3', { text: lesson.title }),
-        el('p', { text: lesson.summary }),
+  for (const module of modules) {
+    const moduleLessons = course.lessons.filter((lesson) => lesson.moduleId === module.id);
+    if (!moduleLessons.length) continue;
+
+    const completed = moduleLessons.filter((lesson) => progress.completed[lesson.id]).length;
+    const section = el('section', { className: 'course-module' }, [
+      el('div', { className: 'course-module-head' }, [
+        el('div', {}, [
+          el('p', { className: 'course-module-kicker', text: `Module ${module.order}` }),
+          el('h2', { text: module.title }),
+          module.description ? el('p', { className: 'course-module-description', text: module.description }) : null,
+        ]),
+        el('span', {
+          className: 'course-module-count',
+          text: `${completed}/${moduleLessons.length} complete`,
+        }),
       ]),
-      el('div', { className: 'lesson-row-meta' }, [
-        el('span', { text: `${lesson.minutes} min` }),
-        score ? scorePill(score.best) : null,
-      ].filter(Boolean)),
+      el('div', { className: 'module-lessons' }, moduleLessons.map((lesson) => lessonRow(course, lesson, progress))),
     ]);
 
-    // Remember the last course the user browsed (used by the dashboard).
-    row.addEventListener('click', () => recordVisit(lesson.id));
-    list.append(row);
+    list.append(section);
   }
+}
+
+function lessonRow(course, lesson, progress) {
+  const completed = Boolean(progress.completed[lesson.id]);
+  const score = progress.scores[lesson.exercise.id];
+
+  const row = el('a', {
+    className: `lesson-row${completed ? ' is-complete' : ''}`,
+    attrs: { href: `lesson.html?course=${course.id}&id=${lesson.id}` },
+  }, [
+    el('span', {
+      className: 'lesson-status',
+      text: completed ? '✓' : String(lesson.order),
+      attrs: { 'aria-hidden': 'true' },
+    }),
+    el('div', { className: 'lesson-row-body' }, [
+      el('h3', { text: lesson.title }),
+      el('p', { text: lesson.summary }),
+    ]),
+    el('div', { className: 'lesson-row-meta' }, [
+      el('span', { text: `${lesson.minutes} min` }),
+      score ? scorePill(score.best) : null,
+    ].filter(Boolean)),
+  ]);
+
+  // Remember the last course the user browsed (used by the dashboard).
+  row.addEventListener('click', () => recordVisit(lesson.id));
+  return row;
 }
 
 function scorePill(best) {

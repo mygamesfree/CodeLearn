@@ -24,7 +24,7 @@ import {
   verifyDemoUser,
 } from './storage.js';
 
-const SUPABASE_CDN = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+const SUPABASE_CDN = 'https://esm.sh/@supabase/supabase-js@2?bundle';
 
 let client = null;
 let mode = 'demo';

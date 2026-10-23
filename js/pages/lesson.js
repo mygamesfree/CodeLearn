@@ -43,15 +43,34 @@ function renderArticle() {
   article.append(
     el('p', {
       className: 'breadcrumb',
-      html: `<a href="courses.html">Courses</a> <span>/</span> <a href="course.html?id=${course.id}">${course.shortTitle}</a> <span>/</span> Lesson ${lesson.order}`,
+      html: `<a href="courses.html">Courses</a> <span>/</span> <a href="course.html?id=${course.id}">${course.shortTitle}</a> <span>/</span> ${escapeHtml(lesson.moduleTitle || 'Lesson')} <span>/</span> Lesson ${lesson.order}`,
     }),
     el('h1', { text: lesson.title }),
     el('p', { className: 'muted', text: `${lesson.summary} · ${lesson.minutes} min read` }),
   );
 
+  if (lesson.objectives?.length) {
+    article.append(buildListBlock('lesson-objectives', 'Learning objectives', lesson.objectives, '🎯'));
+  }
+
   // Lesson HTML is authored by us inside js/data.js — safe to insert directly.
   const body = el('div', { html: lesson.content });
   article.append(body);
+
+  if (lesson.tasks?.length) {
+    article.append(buildListBlock('lesson-tasks', 'Practical tasks', lesson.tasks, '⌨'));
+  }
+
+  if (lesson.takeaways?.length) {
+    article.append(buildListBlock('lesson-takeaways', 'Summary', lesson.takeaways, '✓'));
+  }
+}
+
+function buildListBlock(className, title, items, icon) {
+  return el('section', { className: `lesson-guide ${className}` }, [
+    el('h2', { html: `<span class="lesson-guide-icon" aria-hidden="true">${icon}</span> ${title}` }),
+    el('ul', {}, items.map((item) => el('li', { text: item }))),
+  ]);
 }
 
 function renderToc() {

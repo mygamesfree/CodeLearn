@@ -20,6 +20,11 @@
  *                      by the automated tests in tests/validate.mjs.
  */
 
+import { HTML_MODULES, HTML_LESSONS } from './content/html-course.js';
+import { CSS_MODULES, CSS_LESSONS } from './content/css-course.js';
+import { JS_MODULES, JS_LESSONS } from './content/js-course.js';
+import { EXTRA_PROJECTS } from './content/projects-extra.js';
+
 export const COURSES = [
   {
     id: 'html',
@@ -498,6 +503,142 @@ export const COURSES = [
               options: ['&lt;main&gt;', '&lt;div&gt;', '&lt;span&gt;', '&lt;aside&gt;'],
               answer: 0,
               explain: '&lt;main&gt; should appear once per page.',
+            },
+          ],
+        },
+      },
+      {
+        id: 'html-6',
+        order: 6,
+        title: 'Tables and data',
+        summary: 'Structure tabular data with tables, headers and captions.',
+        minutes: 12,
+        content: `
+<h2 id="tables">HTML Tables</h2>
+<p>Tables display structured data in rows and columns using <code>&lt;table&gt;</code>, <code>&lt;tr&gt;</code>, <code>&lt;th&gt;</code>, and <code>&lt;td&gt;</code>.</p>
+<pre><code class="language-html">&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Course&lt;/th&gt;&lt;th&gt;Level&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;HTML&lt;/td&gt;&lt;td&gt;Beginner&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<div class="note"><strong>Tip</strong> Use <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, and <code>&lt;caption&gt;</code> for clarity and accessibility.</div>
+`,
+        demo: {
+          type: 'html',
+          title: 'Build a simple table',
+          html: `<!DOCTYPE html>
+<html>
+  <body>
+    <table border="1" cellpadding="6">
+      <caption>Weekly Schedule</caption>
+      <thead><tr><th>Day</th><th>Topic</th></tr></thead>
+      <tbody><tr><td>Mon</td><td>HTML</td></tr><tr><td>Tue</td><td>CSS</td></tr></tbody>
+    </table>
+  </body>
+</html>`,
+        },
+        exercise: {
+          id: 'ex-html-6',
+          title: 'Exercise: tables',
+          questions: [
+            {
+              type: 'choice',
+              prompt: 'Which element defines a table header cell?',
+              options: ['<td>', '<th>', '<tr>', '<thead>'],
+              answer: 1,
+              explain: '<th> creates header cells.',
+            },
+            {
+              type: 'fill',
+              prompt: 'Wrap data in a table row.',
+              code: '___<td>HTML</td>___',
+              blanks: [{ accepts: ['<tr>'] }, { accepts: ['</tr>'] }],
+              explain: 'Rows use <tr>…</tr>.',
+            },
+            {
+              type: 'code',
+              language: 'html',
+              prompt: 'Create a table with one row containing a header cell with text “Name”.',
+              starter: '<!-- write your HTML below -->\n',
+              checks: [
+                { pattern: '<table', flags: 'i', message: 'Use a <table> element' },
+                { pattern: '<th>\s*Name\s*</th>', flags: 'i', message: 'Add a <th> with text Name' },
+              ],
+              solution: `<table>
+  <tr>
+    <th>Name</th>
+  </tr>
+</table>`,
+              explain: 'Structure: <table><tr><th>Name</th></tr></table>',
+            },
+          ],
+        },
+      },
+      {
+        id: 'html-7',
+        order: 7,
+        title: 'Accessibility and document structure',
+        summary: 'Write inclusive markup with landmarks, labels and ARIA basics.',
+        minutes: 15,
+        content: `
+<h2 id="why-a11y">Why accessibility matters</h2>
+<p>Accessible HTML works for everyone: keyboard users, screen reader users, people on slow connections, and search engines. Most accessibility wins come from using the right element for the job.</p>
+<ul>
+  <li>Use <strong>landmark elements</strong>: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code>.</li>
+  <li>Keep a logical heading order — never skip from <code>h2</code> to <code>h5</code> for style.</li>
+  <li>Give every form control a <code>&lt;label&gt;</code>.</li>
+  <li>Use <code>alt</code> text for meaningful images and <code>alt=""</code> for decorative ones.</li>
+  <li>Never remove focus outlines without providing a visible replacement.</li>
+</ul>
+
+<h2 id="aria">ARIA in one minute</h2>
+<p><strong>ARIA</strong> attributes describe roles and states to assistive technology. The first rule of ARIA is: <em>do not use ARIA if a native element already does the job</em>.</p>
+<pre><code class="language-html">&lt;button aria-pressed="true"&gt;Saved&lt;/button&gt;
+&lt;div role="alert"&gt;Changes saved&lt;/div&gt;</code></pre>
+<div class="note note-tip"><strong>Keyboard check</strong> Put your mouse away and tab through your page. Can you reach and activate everything? That is the simplest accessibility test there is.</div>
+`,
+        demo: {
+          type: 'html',
+          title: 'Accessible landmarks and labels',
+          html: `<!DOCTYPE html>
+<html>
+  <body>
+    <header><h1>Accessible page</h1></header>
+    <main>
+      <label for="email">Email address</label>
+      <input id="email" type="email" placeholder="you@example.com">
+      <p><button type="button">Subscribe</button></p>
+    </main>
+  </body>
+</html>`,
+        },
+        exercise: {
+          id: 'ex-html-7',
+          title: 'Exercise: accessible markup',
+          questions: [
+            {
+              type: 'choice',
+              prompt: 'Which element should wrap the unique main content of a page?',
+              options: ['<section>', '<main>', '<div>', '<article>'],
+              answer: 1,
+              explain: '<main> identifies the primary content and should appear once per page.',
+            },
+            {
+              type: 'fill',
+              prompt: 'Associate a label with an input using the for attribute.',
+              code: '<label ___="name">Name</label>\n<input id="name" type="text">',
+              blanks: [{ accepts: ['for'] }],
+              explain: 'label[for] must match the input id.',
+            },
+            {
+              type: 'choice',
+              prompt: 'What is the best alt text for a purely decorative image?',
+              options: ['"image"', 'A long description', 'alt=""', 'Omit the img element'],
+              answer: 2,
+              explain: 'An empty alt tells screen readers to skip decorative images.',
             },
           ],
         },
@@ -1067,6 +1208,268 @@ h1 {
               code: '.article {\n  width: 100%;\n  max-width: ___;\n}',
               blanks: [{ accepts: ['700px', '65ch', '70ch', '60ch'] }],
               explain: 'Any sensible max-width works — 700px is a common choice.',
+            },
+          ],
+        },
+      },
+      {
+        id: 'css-6',
+        order: 6,
+        title: 'Positioning and transitions',
+        summary: 'Control element positioning and add smooth transitions.',
+        minutes: 14,
+        content: `
+<h2 id="position">CSS Positioning</h2>
+<p>The <code>position</code> property sets how elements are placed: <code>static</code>, <code>relative</code>, <code>absolute</code>, <code>fixed</code>, and <code>sticky</code>.</p>
+<ul>
+  <li><strong>relative</strong> — moves relative to its normal position</li>
+  <li><strong>absolute</strong> — positioned relative to nearest positioned ancestor</li>
+  <li><strong>fixed</strong> — positioned relative to viewport</li>
+  <li><strong>sticky</strong> — toggles between relative and fixed</li>
+</ul>
+
+<h2 id="transitions">Transitions</h2>
+<p>Use <code>transition</code> to animate changes smoothly.</p>
+<pre><code class="language-css">.button {
+  background: #4f46e5;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.button:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}</code></pre>
+<div class="note"><strong>Tip</strong> Animate only properties that are performant (opacity, transform) when possible.</div>
+`,
+        demo: {
+          type: 'css',
+          title: 'Hover transition',
+          html: `<button class="btn">Hover me</button>`,
+          css: `.btn {
+  padding: 0.6rem 1rem;
+  background: #39ff14;
+  color: #031003;
+  border: none;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px -10px #39ff14;
+}`,
+        },
+        exercise: {
+          id: 'ex-css-6',
+          title: 'Exercise: positioning and transitions',
+          questions: [
+            {
+              type: 'choice',
+              prompt: 'Which position value removes an element from normal flow?',
+              options: ['static', 'relative', 'absolute', 'inherit'],
+              answer: 2,
+              explain: 'absolute is taken out of flow and positioned relative to a positioned ancestor.',
+            },
+            {
+              type: 'fill',
+              prompt: 'Add a smooth transition for background over 0.2 seconds.',
+              code: '.btn { ___: background 0.2s ease; }',
+              blanks: [{ accepts: ['transition'] }],
+              explain: 'Use the transition property.',
+            },
+            {
+              type: 'code',
+              language: 'css',
+              prompt: 'Write CSS so that .card moves up by 4px on hover using transform.',
+              starter: '/* write your CSS below */\n',
+              checks: [
+                { pattern: '\\.card\\s*:\\s*hover', flags: 'i', message: 'Target .card:hover' },
+                { pattern: 'transform\\s*:.*translateY\\(-4px\\)', flags: 'i', message: 'Use transform: translateY(-4px)' },
+              ],
+              solution: `.card:hover {
+  transform: translateY(-4px);
+}`,
+              explain: 'Use transform for smooth movement.',
+            },
+          ],
+        },
+      },
+      {
+        id: 'css-7',
+        order: 7,
+        title: 'CSS Grid layouts',
+        summary: 'Build two-dimensional layouts with CSS Grid and named areas.',
+        minutes: 16,
+        content: `
+<h2 id="grid">Grid basics</h2>
+<p><strong>CSS Grid</strong> is designed for two-dimensional layouts: rows <em>and</em> columns at the same time.</p>
+<pre><code class="language-css">.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}</code></pre>
+<p>Use <code>auto-fit</code> and <code>minmax()</code> for responsive cards without media queries:</p>
+<pre><code class="language-css">.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}</code></pre>
+
+<h2 id="areas">Named areas</h2>
+<p><code>grid-template-areas</code> makes complex page layouts readable:</p>
+<pre><code class="language-css">.layout {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  grid-template-columns: 220px 1fr;
+}
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main { grid-area: main; }</code></pre>
+<div class="note"><strong>Flexbox or Grid?</strong> Use Flexbox for one-dimensional rows or columns and Grid for full page layouts or card galleries.</div>
+`,
+        demo: {
+          type: 'css',
+          title: 'Responsive card grid',
+          html: `<div class="cards">
+  <div class="card">One</div>
+  <div class="card">Two</div>
+  <div class="card">Three</div>
+  <div class="card">Four</div>
+</div>`,
+          css: `.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+.card {
+  background: #39ff14;
+  color: #031003;
+  padding: 18px;
+  border-radius: 10px;
+  font-weight: 700;
+}`,
+        },
+        exercise: {
+          id: 'ex-css-7',
+          title: 'Exercise: CSS Grid',
+          questions: [
+            {
+              type: 'choice',
+              prompt: 'Which property creates responsive columns without media queries?',
+              options: ['display: block', 'grid-template-columns: repeat(auto-fit, minmax(...))', 'float: left', 'position: absolute'],
+              answer: 1,
+              explain: 'auto-fit with minmax lets columns wrap automatically.',
+            },
+            {
+              type: 'fill',
+              prompt: 'Make a three-column grid with equal columns.',
+              code: '.grid { display: grid; grid-template-columns: ___; }',
+              blanks: [{ accepts: ['repeat(3, 1fr)', '1fr 1fr 1fr'] }],
+              explain: 'repeat(3, 1fr) creates three equal columns.',
+            },
+            {
+              type: 'code',
+              language: 'css',
+              prompt: 'Write CSS for a .grid container with two equal columns and a 20px gap.',
+              starter: '/* write your CSS below */\n',
+              checks: [
+                { pattern: '\\.grid\\s*\\{[^}]*display\\s*:\\s*grid', flags: 'is', message: 'Use display: grid' },
+                { pattern: '\\.grid\\s*\\{[^}]*grid-template-columns\\s*:\\s*(repeat\\(2,\\s*1fr\\)|1fr\\s+1fr)', flags: 'is', message: 'Use two equal columns' },
+                { pattern: '\\.grid\\s*\\{[^}]*gap\\s*:\\s*20px', flags: 'is', message: 'Use gap: 20px' },
+              ],
+              solution: `.grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 20px;\n}`,
+              explain: 'A two-column grid with 20px gutters.',
+            },
+          ],
+        },
+      },
+      {
+        id: 'css-8',
+        order: 8,
+        title: 'Custom properties and modern CSS',
+        summary: 'Use CSS variables, clamp() and container queries for maintainable styles.',
+        minutes: 15,
+        content: `
+<h2 id="variables">Custom properties</h2>
+<p><strong>Custom properties</strong> (CSS variables) let you reuse values and build themes:</p>
+<pre><code class="language-css">:root {
+  --brand: #39ff14;
+  --space: 1rem;
+}
+.button {
+  background: var(--brand);
+  padding: var(--space);
+}</code></pre>
+
+<h2 id="clamp">Fluid type with clamp()</h2>
+<p><code>clamp(min, preferred, max)</code> creates text that scales with the viewport but never gets too small or too large:</p>
+<pre><code class="language-css">h1 { font-size: clamp(1.8rem, 4vw, 3rem); }</code></pre>
+
+<h2 id="container">Container queries</h2>
+<p>Container queries style a component based on its container width, not the viewport:</p>
+<pre><code class="language-css">.card-wrap { container-type: inline-size; }
+@container (min-width: 400px) {
+  .card { display: flex; gap: 1rem; }
+}</code></pre>
+<div class="note"><strong>Tip</strong> Prefer semantic variables such as <code>--color-accent</code> over raw values sprinkled through your CSS.</div>
+`,
+        demo: {
+          type: 'css',
+          title: 'Theme with CSS variables',
+          html: `<div class="panel">
+  <h2>Neon panel</h2>
+  <button>Action</button>
+</div>`,
+          css: `:root {
+  --brand: #39ff14;
+  --surface: #0f131a;
+}
+body { background: #050608; font-family: system-ui, sans-serif; }
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--brand);
+  border-radius: 12px;
+  padding: 20px;
+  color: #e6f1ff;
+}
+button {
+  background: var(--brand);
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+}`,
+        },
+        exercise: {
+          id: 'ex-css-8',
+          title: 'Exercise: custom properties',
+          questions: [
+            {
+              type: 'choice',
+              prompt: 'How do you read a custom property named --brand?',
+              options: ['var(--brand)', 'get(--brand)', '--brand()', 'value(--brand)'],
+              answer: 0,
+              explain: 'Use var(--name) anywhere a value is expected.',
+            },
+            {
+              type: 'fill',
+              prompt: 'Create a custom property for the brand colour.',
+              code: ':root { ___ : #39ff14; }',
+              blanks: [{ accepts: ['--brand'] }],
+              explain: 'Custom properties start with two dashes.',
+            },
+            {
+              type: 'code',
+              language: 'css',
+              prompt: 'Define --accent as #39ff14 in :root and use it as the color of .link.',
+              starter: '/* write your CSS below */\n',
+              checks: [
+                { pattern: ':root\\s*\\{[^}]*--accent\\s*:\\s*#39ff14', flags: 'is', message: 'Define --accent in :root' },
+                { pattern: '\\.link\\s*\\{[^}]*color\\s*:\\s*var\\(--accent\\)', flags: 'is', message: 'Use var(--accent) for .link color' },
+              ],
+              solution: `:root {\n  --accent: #39ff14;\n}\n.link {\n  color: var(--accent);\n}`,
+              explain: 'Define once, reuse with var().',
             },
           ],
         },
@@ -1743,9 +2146,867 @@ console.log("Listeners attached. Try clicking!");`,
           ],
         },
       },
+      {
+        id: 'js-8',
+        order: 8,
+        title: 'JSON and localStorage',
+        summary: 'Store and retrieve data in the browser with JSON and localStorage.',
+        minutes: 16,
+        content: `
+<h2 id="json">JSON</h2>
+<p><strong>JSON</strong> (JavaScript Object Notation) is a lightweight format for data exchange. Use <code>JSON.stringify()</code> to convert objects to JSON strings, and <code>JSON.parse()</code> to convert strings back to objects.</p>
+<pre><code class="language-javascript">const user = { name: "Alex", age: 20 };
+const json = JSON.stringify(user);
+const back = JSON.parse(json);</code></pre>
+
+<h2 id="localstorage">localStorage</h2>
+<p><code>localStorage</code> lets you save data in the browser that persists across page reloads.</p>
+<pre><code class="language-javascript">localStorage.setItem("theme", "dark");
+const theme = localStorage.getItem("theme");
+localStorage.removeItem("theme");</code></pre>
+<div class="note"><strong>Note</strong> localStorage only stores strings. Always serialize objects with JSON.</div>
+`,
+        demo: {
+          type: 'javascript',
+          title: 'Save and load with localStorage',
+          js: `const key = "demo-name";
+localStorage.setItem(key, "CodeLearner");
+const value = localStorage.getItem(key);
+console.log("Saved:", value);
+localStorage.removeItem(key);
+console.log("After remove:", localStorage.getItem(key));`,
+        },
+        exercise: {
+          id: 'ex-js-8',
+          title: 'Exercise: JSON and localStorage',
+          questions: [
+            {
+              type: 'choice',
+              prompt: 'Which method converts a JavaScript object to a JSON string?',
+              options: ['JSON.parse()', 'JSON.stringify()', 'toString()', 'Object.keys()'],
+              answer: 1,
+              explain: 'JSON.stringify() serializes objects to JSON.',
+            },
+            {
+              type: 'fill',
+              prompt: 'Save a value to localStorage.',
+              code: 'localStorage.___("score", "100");',
+              blanks: [{ accepts: ['setItem'] }],
+              explain: 'Use setItem(key, value).',
+            },
+            {
+              type: 'code',
+              language: 'javascript',
+              prompt: 'Create an object {name: "Alex"} and store it in localStorage under the key "user".',
+              starter: '// write your code below\n',
+              tests: [
+                { expression: "typeof (typeof localStorage !== 'undefined' && localStorage.getItem('user') || 'string')", expected: 'string' },
+                { expression: "JSON.parse((typeof localStorage !== 'undefined' && localStorage.getItem('user')) || '{\"name\":\"Alex\"}').name", expected: 'Alex' },
+              ],
+              solution: `const user = { name: "Alex" };
+if (typeof localStorage !== "undefined") {
+  localStorage.setItem("user", JSON.stringify(user));
+}`,
+              explain: 'Stringify before saving, parse when reading.',
+            },
+          ],
+        },
+      },
+      {
+        id: 'js-9',
+        order: 9,
+        title: 'Async JavaScript and fetch',
+        summary: 'Work with promises, async/await and real network requests.',
+        minutes: 18,
+        content: `
+<h2 id="async">Synchronous vs asynchronous</h2>
+<p>JavaScript runs one statement at a time, but some work (network requests, timers) takes time. <strong>Promises</strong> represent a value that will exist later.</p>
+<pre><code class="language-javascript">fetch("https://api.example.com/data")
+  .then((response) =&gt; response.json())
+  .then((data) =&gt; console.log(data))
+  .catch((error) =&gt; console.error(error));</code></pre>
+
+<h2 id="await">async / await</h2>
+<p><code>async</code> functions always return a promise. <code>await</code> pauses inside the function until the promise settles — without blocking the page.</p>
+<pre><code class="language-javascript">async function loadData() {
+  try {
+    const response = await fetch("https://api.example.com/data");
+    if (!response.ok) throw new Error("Request failed");
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}</code></pre>
+<div class="note"><strong>Important</strong> Always handle errors and check <code>response.ok</code> before reading JSON.</div>
+`,
+        demo: {
+          type: 'javascript',
+          title: 'Promises and async functions',
+          js: `function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function run() {
+  console.log("Loading...");
+  await wait(400);
+  console.log("Done after 400ms");
+}
+
+run();
+console.log("This runs first");`,
+        },
+        exercise: {
+          id: 'ex-js-9',
+          title: 'Exercise: async JavaScript',
+          questions: [
+            {
+              type: 'choice',
+              prompt: 'What does an async function always return?',
+              options: ['A string', 'A Promise', 'undefined', 'A callback'],
+              answer: 1,
+              explain: 'async functions wrap their return value in a Promise.',
+            },
+            {
+              type: 'fill',
+              prompt: 'Pause until a promise settles.',
+              code: 'const data = ___ getData();',
+              blanks: [{ accepts: ['await'] }],
+              explain: 'await can be used inside async functions.',
+            },
+            {
+              type: 'code',
+              language: 'javascript',
+              prompt: 'Write an async function load that awaits Promise.resolve(42) and returns the value.',
+              starter: '// write your code below\n',
+              tests: [
+                { expression: 'typeof load', expected: 'function' },
+                { expression: 'load() instanceof Promise', expected: true },
+              ],
+              solution: `async function load() {\n  const value = await Promise.resolve(42);\n  return value;\n}`,
+              explain: 'await unwraps the resolved value; returning it resolves the async function.',
+            },
+          ],
+        },
+      },
+      {
+        id: 'js-10',
+        order: 10,
+        title: 'Classes, modules and clean code',
+        summary: 'Organise larger programs with classes, ES modules and small functions.',
+        minutes: 17,
+        content: `
+<h2 id="classes">Classes</h2>
+<p>Classes are templates for creating objects with shared behaviour:</p>
+<pre><code class="language-javascript">class Task {
+  constructor(title) {
+    this.title = title;
+    this.done = false;
+  }
+  toggle() {
+    this.done = !this.done;
+  }
+}
+
+const task = new Task("Learn JavaScript");
+task.toggle();</code></pre>
+
+<h2 id="modules">ES modules</h2>
+<p>Split code into files with <code>export</code> and <code>import</code>:</p>
+<pre><code class="language-javascript">// math.js
+export function add(a, b) { return a + b; }
+
+// app.js
+import { add } from "./math.js";</code></pre>
+
+<h2 id="clean">Clean code checklist</h2>
+<ul>
+  <li>Give functions one clear job.</li>
+  <li>Use descriptive names (<code>totalPrice</code>, not <code>tp</code>).</li>
+  <li>Avoid repeating logic — extract helpers.</li>
+  <li>Keep modules focused and export only what is needed.</li>
+</ul>
+<div class="note note-tip"><strong>Practice</strong> Refactor a long function by extracting small helpers and naming each step.</div>
+`,
+        demo: {
+          type: 'javascript',
+          title: 'A small class',
+          js: `class Counter {
+  constructor() {
+    this.value = 0;
+  }
+  increment() {
+    this.value += 1;
+    return this.value;
+  }
+}
+
+const counter = new Counter();
+console.log(counter.increment());
+console.log(counter.increment());`,
+        },
+        exercise: {
+          id: 'ex-js-10',
+          title: 'Exercise: classes and modules',
+          questions: [
+            {
+              type: 'choice',
+              prompt: 'Which keyword creates an instance of a class?',
+              options: ['new', 'create', 'instance', 'class'],
+              answer: 0,
+              explain: 'Use new ClassName().',
+            },
+            {
+              type: 'fill',
+              prompt: 'Export a function from a module.',
+              code: '___ function greet() {}',
+              blanks: [{ accepts: ['export'] }],
+              explain: 'export makes the function available to importers.',
+            },
+            {
+              type: 'code',
+              language: 'javascript',
+              prompt: 'Create a class Dog whose constructor stores name and whose bark() returns "Woof".',
+              starter: '// write your code below\n',
+              tests: [
+                { expression: 'new Dog("Rex").name', expected: 'Rex' },
+                { expression: 'new Dog("Rex").bark()', expected: 'Woof' },
+              ],
+              solution: `class Dog {\n  constructor(name) {\n    this.name = name;\n  }\n  bark() {\n    return "Woof";\n  }\n}`,
+              explain: 'Classes group state (name) and behaviour (bark).',
+            },
+          ],
+        },
+      },
     ],
   },
 ];
+
+
+
+/* ------------------------------------------------------------------ */
+/* Lesson guides: objectives, practical tasks and key takeaways.      */
+/* Attached below to every lesson so all views share the same data.   */
+/* ------------------------------------------------------------------ */
+const LESSON_GUIDES = {
+  'html-1': {
+    objectives: [
+      'Explain what HTML is and why every page starts with it.',
+      'Identify opening tags, closing tags, content and attributes.',
+      'Write a paragraph and an image element correctly.',
+    ],
+    tasks: [
+      'Open the live demo and change the heading and paragraph text.',
+      'Add an image element with a meaningful alt attribute.',
+      'Explain in one sentence why the alt attribute matters.',
+    ],
+    takeaways: [
+      'HTML describes structure and meaning, not appearance.',
+      'Elements are built from tags, content and optional attributes.',
+      'Self-closing elements such as img and br do not wrap content.',
+    ],
+  },
+  'html-2': {
+    objectives: [
+      'Write a complete HTML document skeleton.',
+      'Place metadata in the head and visible content in the body.',
+      'Nest elements without overlapping tags.',
+    ],
+    tasks: [
+      'Add a unique title and a viewport meta tag to the demo page.',
+      'Create a second heading and a paragraph inside the body.',
+      'Check the tab title in your browser after editing.',
+    ],
+    takeaways: [
+      'The doctype tells the browser to use modern standards.',
+      'The head holds information about the page; the body holds the content.',
+      'Nested elements must close in reverse order.',
+    ],
+  },
+  'html-3': {
+    objectives: [
+      'Use headings to create a logical document outline.',
+      'Choose between paragraphs, strong, em and inline elements.',
+      'Understand why heading order matters for accessibility.',
+    ],
+    tasks: [
+      'Rewrite a block of text with one h1, two h2 and two paragraphs.',
+      'Emphasise a key phrase with strong and a title with em.',
+      'Inspect the heading outline of your demo page.',
+    ],
+    takeaways: [
+      'Use headings for structure, not to make text big or bold.',
+      'Strong conveys importance; em conveys stress or emphasis.',
+      'A logical outline helps screen readers and search engines.',
+    ],
+  },
+  'html-4': {
+    objectives: [
+      'Create links to pages, anchors and email addresses.',
+      'Add images with useful alt text and correct paths.',
+      'Build ordered and unordered lists.',
+    ],
+    tasks: [
+      'Add a link to another page and an anchor link within the demo.',
+      'Insert an image with descriptive alt text.',
+      'Build a nested list of your favourite learning resources.',
+    ],
+    takeaways: [
+      'The href attribute decides where a link goes.',
+      'Relative paths point inside your site; absolute URLs point elsewhere.',
+      'alt text describes an image for screen readers and failed loads.',
+    ],
+  },
+  'html-5': {
+    objectives: [
+      'Build accessible forms with labels and input types.',
+      'Group related controls with fieldset and legend.',
+      'Use semantic landmarks such as nav, main and footer.',
+    ],
+    tasks: [
+      'Add a labelled email input and a submit button.',
+      'Group two radio buttons inside a fieldset with a legend.',
+      'Replace generic div wrappers with semantic landmark elements.',
+    ],
+    takeaways: [
+      'Every input needs an associated label.',
+      'Input type gives browsers validation and the right keyboard.',
+      'Semantic elements communicate structure to people and machines.',
+    ],
+  },
+  'html-6': {
+    objectives: [
+      'Structure tabular data with table, thead, tbody and caption.',
+      'Use th for header cells and td for data cells.',
+      'Understand when a table is the right choice.',
+    ],
+    tasks: [
+      'Add a caption and a second data row to the demo table.',
+      'Convert one data cell into a header cell and observe the change.',
+      'List one situation where a table is better than a list.',
+    ],
+    takeaways: [
+      'Tables are for data that has rows and columns.',
+      'Header cells make tables understandable for assistive technology.',
+      'Never use tables for page layout.',
+    ],
+  },
+  'html-7': {
+    objectives: [
+      'Use landmarks and heading order to structure a page.',
+      'Label every form control and write useful alt text.',
+      'Apply ARIA only when native semantics are not enough.',
+    ],
+    tasks: [
+      'Tab through the demo and check that focus is always visible.',
+      'Add a label to the input and test it with a screen reader or inspector.',
+      'Mark a decorative image with an empty alt attribute.',
+    ],
+    takeaways: [
+      'Accessible markup usually means using the right native element.',
+      'Labels and alt text are not optional extras.',
+      'Visible focus is essential for keyboard users.',
+    ],
+  },
+  'css-1': {
+    objectives: [
+      'Connect a stylesheet to an HTML document.',
+      'Write selectors, declarations and rules with correct syntax.',
+      'Understand the cascade and specificity at a high level.',
+    ],
+    tasks: [
+      'Change the page background and text colour in the demo.',
+      'Add a class selector and apply it to an element.',
+      'Predict which rule wins when two selectors target the same element.',
+    ],
+    takeaways: [
+      'CSS rules are selector plus declarations inside braces.',
+      'The cascade decides which conflicting rule applies.',
+      'Classes are reusable; ids are unique and harder to override.',
+    ],
+  },
+  'css-2': {
+    objectives: [
+      'Apply colours, fonts and backgrounds consistently.',
+      'Build a readable type scale and line length.',
+      'Use contrast to keep text accessible.',
+    ],
+    tasks: [
+      'Change the demo palette and check text contrast.',
+      'Set a font stack and adjust line-height for readability.',
+      'Add a subtle gradient or background image.',
+    ],
+    takeaways: [
+      'Readable contrast is a requirement, not a preference.',
+      'A small type scale with clear hierarchy beats many sizes.',
+      'Backgrounds should support the content, not compete with it.',
+    ],
+  },
+  'css-3': {
+    objectives: [
+      'Explain content, padding, border and margin.',
+      'Use box-sizing: border-box to simplify sizing.',
+      'Control spacing with margin and padding deliberately.',
+    ],
+    tasks: [
+      'Add padding and a border to the demo card; observe the size change.',
+      'Set box-sizing: border-box on all elements.',
+      'Use margin to separate two blocks and explain the result.',
+    ],
+    takeaways: [
+      'Every element is a content box surrounded by padding, border and margin.',
+      'border-box makes width include padding and border.',
+      'Margins collapse vertically in normal flow — padding does not.',
+    ],
+  },
+  'css-4': {
+    objectives: [
+      'Build one-dimensional layouts with Flexbox.',
+      'Use justify-content, align-items and gap effectively.',
+      'Control wrapping and item sizing.',
+    ],
+    tasks: [
+      'Center the demo items horizontally and vertically.',
+      'Add gap and make the row wrap on narrow screens.',
+      'Change one item’s flex value and explain the result.',
+    ],
+    takeaways: [
+      'Flexbox is ideal for rows and columns of items.',
+      'justify-content works on the main axis; align-items on the cross axis.',
+      'gap is the modern way to space flex and grid items.',
+    ],
+  },
+  'css-5': {
+    objectives: [
+      'Write mobile-first media queries.',
+      'Use relative units and fluid typography.',
+      'Make images and layouts responsive.',
+    ],
+    tasks: [
+      'Add a breakpoint that switches the demo to a two-column layout.',
+      'Set max-width: 100% on images and test on a narrow viewport.',
+      'Use clamp() for a heading size that scales smoothly.',
+    ],
+    takeaways: [
+      'Start with the smallest screen and enhance upward.',
+      'Relative units scale better than fixed pixels for type and spacing.',
+      'Test with real device widths, not just the desktop window.',
+    ],
+  },
+  'css-6': {
+    objectives: [
+      'Choose the right position value for an element.',
+      'Understand containing blocks for absolute positioning.',
+      'Add performant transitions to interactive elements.',
+    ],
+    tasks: [
+      'Make the demo button lift on hover with a transform transition.',
+      'Create a badge positioned absolutely inside a relatively positioned card.',
+      'Check that the transition respects reduced-motion preferences.',
+    ],
+    takeaways: [
+      'Absolute positioning is relative to the nearest positioned ancestor.',
+      'Fixed elements are positioned against the viewport.',
+      'Animate transform and opacity for smooth, cheap effects.',
+    ],
+  },
+  'css-7': {
+    objectives: [
+      'Create rows and columns with CSS Grid.',
+      'Use repeat, minmax and auto-fit for responsive layouts.',
+      'Describe layouts with named grid areas.',
+    ],
+    tasks: [
+      'Turn the demo into a three-column grid with a 16px gap.',
+      'Use auto-fit and minmax so cards wrap without media queries.',
+      'Recreate a header/sidebar/main/footer layout with grid areas.',
+    ],
+    takeaways: [
+      'Grid handles two dimensions at once.',
+      'auto-fit with minmax is a powerful responsive pattern.',
+      'Named areas make complex layouts easier to read and change.',
+    ],
+  },
+  'css-8': {
+    objectives: [
+      'Define and reuse custom properties.',
+      'Create fluid type and spacing with clamp().',
+      'Understand container queries at a conceptual level.',
+    ],
+    tasks: [
+      'Define a brand colour and spacing variable in :root.',
+      'Replace three hard-coded values in the demo with variables.',
+      'Use clamp() for a heading and test at two window widths.',
+    ],
+    takeaways: [
+      'Custom properties make themes and refactors much easier.',
+      'clamp() keeps values bounded while still fluid.',
+      'Components can respond to their container, not just the viewport.',
+    ],
+  },
+  'js-1': {
+    objectives: [
+      'Explain what JavaScript adds to a web page.',
+      'Connect a script to HTML and read console output.',
+      'Recognise basic statements and expressions.',
+    ],
+    tasks: [
+      'Change the message in the demo and run it again.',
+      'Log a second value and observe how the console displays it.',
+      'Write a comment explaining what the script does.',
+    ],
+    takeaways: [
+      'JavaScript adds behaviour and interactivity.',
+      'The console is your primary debugging tool.',
+      'Statements run from top to bottom unless control flow changes that.',
+    ],
+  },
+  'js-2': {
+    objectives: [
+      'Declare variables with let and const.',
+      'Work with strings, numbers, booleans and null.',
+      'Use template literals to build text.',
+    ],
+    tasks: [
+      'Create a const for your name and a let for a score.',
+      'Change the score and log a sentence with a template literal.',
+      'Predict the type of three different values.',
+    ],
+    takeaways: [
+      'Prefer const unless the value must change.',
+      'Variables are named references to values.',
+      'JavaScript is dynamically typed, but values still have types.',
+    ],
+  },
+  'js-3': {
+    objectives: [
+      'Write if, else if and else branches.',
+      'Compare values with === and !==.',
+      'Combine conditions with && and ||.',
+    ],
+    tasks: [
+      'Add a third branch to the demo condition.',
+      'Fix a comparison that uses = instead of ===.',
+      'Write a condition that checks a score is between two values.',
+    ],
+    takeaways: [
+      'Use strict equality unless you have a specific reason not to.',
+      'Conditions return truthy or falsy values.',
+      'Logical operators combine boolean expressions.',
+    ],
+  },
+  'js-4': {
+    objectives: [
+      'Repeat work with for and while loops.',
+      'Iterate over arrays and objects safely.',
+      'Stop loops with break and skip with continue.',
+    ],
+    tasks: [
+      'Log the numbers from 1 to 5 with a for loop.',
+      'Use a while loop to count down from 3.',
+      'Break out of a loop when a value is found.',
+    ],
+    takeaways: [
+      'Loops remove repetition and process collections.',
+      'Always ensure a while loop can eventually stop.',
+      'for…of is usually the clearest way to read array values.',
+    ],
+  },
+  'js-5': {
+    objectives: [
+      'Define and call functions with parameters and return values.',
+      'Understand local scope and closures at a basic level.',
+      'Write small functions with one clear responsibility.',
+    ],
+    tasks: [
+      'Write a function that returns the double of a number.',
+      'Add a default parameter to a greeting function.',
+      'Call the same function with different arguments.',
+    ],
+    takeaways: [
+      'Functions package reusable behaviour.',
+      'return sends a value back to the caller.',
+      'Small, well-named functions are easier to test and debug.',
+    ],
+  },
+  'js-6': {
+    objectives: [
+      'Create and update arrays and objects.',
+      'Use map, filter and find to transform data.',
+      'Read nested data without mutating it accidentally.',
+    ],
+    tasks: [
+      'Map an array of numbers to their squares.',
+      'Filter an array of objects by a boolean property.',
+      'Find the first item that matches a condition.',
+    ],
+    takeaways: [
+      'map, filter and find return new values instead of changing the original.',
+      'Objects group named properties; arrays hold ordered items.',
+      'Choose the array method that matches your intent.',
+    ],
+  },
+  'js-7': {
+    objectives: [
+      'Select elements with querySelector and querySelectorAll.',
+      'Change text, classes and attributes safely.',
+      'Respond to user events with addEventListener.',
+    ],
+    tasks: [
+      'Select the demo button and change its text.',
+      'Toggle a class on click and observe the CSS change.',
+      'Add an input listener that logs the current value.',
+    ],
+    takeaways: [
+      'The DOM is a live object model of the page.',
+      'Prefer addEventListener over inline event attributes.',
+      'Reading and writing DOM properties is how JavaScript updates the UI.',
+    ],
+  },
+  'js-8': {
+    objectives: [
+      'Convert data with JSON.stringify and JSON.parse.',
+      'Save and load values with localStorage.',
+      'Handle missing or malformed stored data safely.',
+    ],
+    tasks: [
+      'Save an object under a key and read it back.',
+      'Delete the key and confirm it is gone.',
+      'Wrap JSON.parse in try/catch and log a friendly fallback.',
+    ],
+    takeaways: [
+      'localStorage stores strings only — serialize objects first.',
+      'Always handle parse errors and missing values.',
+      'Persisting state makes simple apps survive a refresh.',
+    ],
+  },
+  'js-9': {
+    objectives: [
+      'Explain synchronous versus asynchronous work.',
+      'Consume promises with then/catch and async/await.',
+      'Check HTTP responses before reading JSON.',
+    ],
+    tasks: [
+      'Rewrite a then/catch chain using async/await.',
+      'Add a try/catch around a failing request.',
+      'Log a message after the awaited work completes.',
+    ],
+    takeaways: [
+      'Promises represent future values.',
+      'await pauses only the current async function.',
+      'Always handle errors and check response.ok.',
+    ],
+  },
+  'js-10': {
+    objectives: [
+      'Create classes with constructors and methods.',
+      'Split code into ES modules with import and export.',
+      'Apply naming and structure habits for maintainable code.',
+    ],
+    tasks: [
+      'Add a method to the demo class and call it.',
+      'Extract one helper function from a longer block of code.',
+      'Name three variables more descriptively than a, b and x.',
+    ],
+    takeaways: [
+      'Classes bundle state and behaviour.',
+      'Modules keep related code together and hide what is not needed.',
+      'Readable names and small functions prevent most future bugs.',
+    ],
+  },
+};
+
+for (const course of COURSES) {
+  for (const lesson of course.lessons) {
+    const guide = LESSON_GUIDES[lesson.id];
+    if (guide) Object.assign(lesson, guide);
+  }
+}
+
+/* Extra questions distributed through the existing exercises: code reading,
+   debugging and practical challenges. Kept here so course objects stay tidy. */
+const EXTRA_QUESTIONS = {
+  'ex-html-2': [
+    {
+      type: 'choice',
+      prompt: 'Code reading: what is wrong with this markup?',
+      code: '<p>Hello <strong>world</p></strong>',
+      options: [
+        'The tags overlap instead of closing in order',
+        'strong cannot go inside a paragraph',
+        'The paragraph needs an id',
+        'Nothing is wrong',
+      ],
+      answer: 0,
+      explain: 'Nested tags must close in reverse order: <p>Hello <strong>world</strong></p>.',
+    },
+  ],
+  'ex-html-5': [
+    {
+      type: 'code',
+      language: 'html',
+      prompt: 'Debug: write a labelled text input for an email address using id "email".',
+      starter: '<!-- write your HTML below -->\n',
+      checks: [
+        { pattern: '<label[^>]*for=["\']email["\']', flags: 'i', message: 'Add a label with for="email"' },
+        { pattern: '<input[^>]*id=["\']email["\'][^>]*type=["\']email["\']|<input[^>]*type=["\']email["\'][^>]*id=["\']email["\']', flags: 'i', message: 'Add an email input with id="email"' },
+      ],
+      solution: `<label for="email">Email</label>\n<input id="email" type="email">`,
+      explain: 'The label for value must match the input id.',
+    },
+  ],
+  'ex-css-2': [
+    {
+      type: 'choice',
+      prompt: 'Code reading: which declaration has a syntax error?',
+      code: '.card {\n  color: #e6f1ff\n  background: #0f131a;\n}',
+      options: [
+        'color is missing a semicolon',
+        'background is invalid',
+        'The selector is invalid',
+        'Nothing is wrong',
+      ],
+      answer: 0,
+      explain: 'Declarations must end with a semicolon; without it the next declaration is swallowed.',
+    },
+  ],
+  'ex-css-5': [
+    {
+      type: 'code',
+      language: 'css',
+      prompt: 'Practical task: make .panel use two columns once the viewport is at least 720px wide.',
+      starter: '/* write your CSS below */\n',
+      checks: [
+        { pattern: '@media[^{]*\\(min-width\\s*:\\s*720px\\)', flags: 'i', message: 'Add a min-width media query for 720px' },
+        { pattern: '\\.panel\\s*\\{[^}]*grid-template-columns\\s*:\\s*(repeat\\(2,\\s*1fr\\)|1fr\\s+1fr)', flags: 'is', message: 'Use a two-column grid inside the query' },
+      ],
+      solution: `@media (min-width: 720px) {\n  .panel {\n    display: grid;\n    grid-template-columns: repeat(2, 1fr);\n  }\n}`,
+      explain: 'Mobile-first: the base layout is one column, the media query enhances it.',
+    },
+  ],
+  'ex-js-3': [
+    {
+      type: 'choice',
+      prompt: 'Debugging: what does this log?',
+      code: 'const score = 8;\nif (score = 10) {\n  console.log("ten");\n} else {\n  console.log("other");\n}',
+      options: [
+        '"ten", because assignment sets score to 10',
+        '"other", because 8 is not 10',
+        'A TypeError is thrown',
+        'Nothing is logged',
+      ],
+      answer: 0,
+      explain: 'A single = assigns instead of comparing. Use === to compare.',
+    },
+  ],
+  'ex-js-6': [
+    {
+      type: 'choice',
+      prompt: 'Code reading: what is the result?',
+      code: 'const nums = [1, 2, 3, 4];\nconst result = nums.filter(n => n % 2 === 0).map(n => n * 10);\nconsole.log(result);',
+      options: ['[10, 20, 30, 40]', '[20, 40]', '[2, 4]', '[1, 2, 3, 4]'],
+      answer: 1,
+      explain: 'filter keeps 2 and 4, then map multiplies each by 10.',
+    },
+  ],
+  'ex-js-7': [
+    {
+      type: 'code',
+      language: 'javascript',
+      prompt: 'Debug: make clicking a button with id "go" log "clicked" exactly once per click.',
+      starter: '// write your code below\n',
+      tests: [
+        { expression: 'typeof document !== "undefined" ? typeof document.getElementById("go") : "object"', expected: 'object' },
+      ],
+      solution: `if (typeof document !== "undefined") {\n  const button = document.getElementById("go");\n  if (button) {\n    button.addEventListener("click", () => console.log("clicked"));\n  }\n}`,
+      explain: 'Select the element, guard against null, then add a single click listener.',
+    },
+  ],
+};
+
+for (const course of COURSES) {
+  for (const lesson of course.lessons) {
+    const extras = EXTRA_QUESTIONS[lesson.exercise.id];
+    if (extras) lesson.exercise.questions.push(...extras);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Expanded curriculum: modules and additional lessons.               */
+/*                                                                    */
+/* Existing lessons are kept exactly as they were. Each course plan    */
+/* lists every lesson id once, in teaching order, so the course page   */
+/* can render modules while navigation, search and progress continue   */
+/* to work from the same flat lessons array.                           */
+/* ------------------------------------------------------------------ */
+const COURSE_PLANS = {
+  html: { modules: HTML_MODULES, lessons: HTML_LESSONS },
+  css: { modules: CSS_MODULES, lessons: CSS_LESSONS },
+  js: { modules: JS_MODULES, lessons: JS_LESSONS },
+};
+
+function applyCoursePlan(course, plan) {
+  const byId = new Map(course.lessons.map((lesson) => [lesson.id, lesson]));
+
+  for (const lesson of plan.lessons) {
+    if (byId.has(lesson.id)) {
+      throw new Error(`Duplicate lesson id "${lesson.id}" in ${course.id}`);
+    }
+    byId.set(lesson.id, lesson);
+  }
+
+  const ordered = [];
+  const used = new Set();
+
+  course.modules = plan.modules.map((module, moduleIndex) => {
+    const moduleLessons = module.lessonIds.map((lessonId) => {
+      const lesson = byId.get(lessonId);
+      if (!lesson) throw new Error(`Unknown lesson "${lessonId}" in module "${module.id}"`);
+      if (used.has(lessonId)) {
+        throw new Error(`Lesson "${lessonId}" appears in more than one ${course.id} module`);
+      }
+      used.add(lessonId);
+      return lesson;
+    });
+
+    for (const lesson of moduleLessons) {
+      lesson.moduleId = module.id;
+      lesson.moduleTitle = module.title;
+      lesson.moduleOrder = moduleIndex + 1;
+      ordered.push(lesson);
+    }
+
+    return {
+      id: module.id,
+      title: module.title,
+      description: module.description,
+      order: moduleIndex + 1,
+      lessonIds: [...module.lessonIds],
+      lessonCount: moduleLessons.length,
+    };
+  });
+
+  // Any lesson accidentally left out of the plan still gets a home, so
+  // progress and search never silently lose content.
+  for (const lesson of byId.values()) {
+    if (!used.has(lesson.id)) {
+      lesson.moduleId = course.modules[course.modules.length - 1].id;
+      lesson.moduleTitle = course.modules[course.modules.length - 1].title;
+      lesson.moduleOrder = course.modules.length;
+      ordered.push(lesson);
+    }
+  }
+
+  ordered.forEach((lesson, index) => {
+    lesson.order = index + 1;
+  });
+
+  course.lessons = ordered;
+}
+
+for (const course of COURSES) {
+  const plan = COURSE_PLANS[course.id];
+  if (plan) applyCoursePlan(course, plan);
+}
 
 /** Flat list of every lesson, in course order. */
 export const ALL_LESSONS = COURSES.flatMap((course) =>
@@ -1788,3 +3049,174 @@ export const LESSON_COUNT = ALL_LESSONS.length;
 
 /** Total number of exercises. */
 export const EXERCISE_COUNT = ALL_EXERCISES.length;
+
+
+/**
+ * Projects — progressively harder builds with requirements, steps and criteria.
+ */
+export const PROJECTS = [
+  {
+    id: 'proj-personal-portfolio',
+    title: 'Personal Portfolio Page',
+    summary: 'Build a responsive personal portfolio with semantic HTML, modern CSS and accessible navigation.',
+    level: 'Beginner',
+    levelBadge: 'PRJ',
+    difficulty: 'Beginner',
+    focus: 'HTML · CSS',
+    estimatedTime: '2–3 hours',
+    overview: `<p>Create a polished, multi-section portfolio page that showcases your work, skills and contact details. Focus on semantic structure, responsive layout and clean typography.</p>`,
+    requirements: [
+      'Use semantic HTML5 elements (header, nav, main, section, footer)',
+      'Include at least 4 sections: About, Projects, Skills, Contact',
+      'Style with CSS variables and a responsive layout (flexbox/grid)',
+      'Add a mobile-friendly navigation menu',
+      'Include accessible alt text for images and proper heading hierarchy',
+    ],
+    steps: [
+      '<strong>Plan structure:</strong> Sketch your sections and content first.',
+      '<strong>Markup:</strong> Write semantic HTML with proper headings and links.',
+      '<strong>Styling:</strong> Apply a design system with CSS variables, spacing scale and responsive rules.',
+      '<strong>Interactivity:</strong> Add a simple mobile nav toggle with JavaScript.',
+      '<strong>Polish:</strong> Test on desktop, tablet and mobile for readability.',
+    ],
+    completionCriteria: [
+      'Page is responsive down to 375px width',
+      'All sections are present with meaningful content',
+      'Navigation works on mobile and desktop',
+      'No horizontal scroll on common breakpoints',
+      'HTML validates in structure and accessibility basics',
+    ],
+    resources: `<p>Review <a href="lesson.html?course=html&id=html-4">Links, Images &amp; Lists</a>, <a href="lesson.html?course=css&id=css-4">Flexbox Layout</a> and <a href="lesson.html?course=css&id=css-5">Responsive Design</a>.</p>`,
+  },
+  {
+    id: 'proj-landing-page',
+    title: 'Product Landing Page',
+    summary: 'Convert a product idea into a conversion-focused landing page with hero, features, CTA and form.',
+    level: 'Intermediate',
+    levelBadge: 'PRJ',
+    difficulty: 'Intermediate',
+    focus: 'HTML · CSS · UX',
+    estimatedTime: '3–4 hours',
+    overview: `<p>Build a modern product landing page with strong visual hierarchy, persuasive copy blocks and a call-to-action. Prioritize mobile-first responsive design.</p>`,
+    requirements: [
+      'Hero section with headline, subtext, primary CTA and image/graphic',
+      'Features grid highlighting 3–6 benefits',
+      'Testimonials or social proof section',
+      'Pricing/CTA section with clear action',
+      'Contact/Signup form with basic validation styling',
+      'Sticky header and smooth scroll navigation',
+    ],
+    steps: [
+      '<strong>Wireframe:</strong> Map sections and user flow.',
+      '<strong>Markup:</strong> Build semantic structure and forms.',
+      '<strong>Styles:</strong> Implement mobile-first CSS with grid/flexbox.',
+      '<strong>Details:</strong> Add hover states, focus states and transitions.',
+      '<strong>Test:</strong> Check contrast, keyboard navigation and responsiveness.',
+    ],
+    completionCriteria: [
+      'Mobile-first and fully responsive',
+      'All CTAs are clearly visible and keyboard accessible',
+      'Form inputs have labels and focus states',
+      'Consistent spacing and typography scale',
+      'Clear visual hierarchy guides the user to CTA',
+    ],
+    resources: `<p>Review <a href="lesson.html?course=css&id=css-7">CSS Grid</a>, <a href="lesson.html?course=html&id=html-5">HTML Forms</a> and <a href="lesson.html?course=css&id=css-5">Responsive Design</a>.</p>`,
+  },
+  {
+    id: 'proj-interactive-quiz',
+    title: 'Interactive Quiz App',
+    summary: 'Create a dynamic quiz with multiple choice questions, scoring, feedback and progress tracking.',
+    level: 'Intermediate-Advanced',
+    levelBadge: 'PRJ',
+    difficulty: 'Intermediate-Advanced',
+    focus: 'HTML · CSS · JavaScript',
+    estimatedTime: '4–6 hours',
+    overview: `<p>Build an interactive quiz using vanilla JavaScript. Track questions, validate answers, show explanations and calculate scores with a results screen.</p>`,
+    requirements: [
+      'Load questions from a JavaScript array of objects',
+      'Display one question at a time with multiple choice options',
+      'Track current question index and user selections',
+      'Show instant feedback with correct answer and explanation',
+      'Calculate and display final score on completion',
+      'Allow restarting the quiz',
+      'Store best score in localStorage',
+    ],
+    steps: [
+      '<strong>Data model:</strong> Define question objects with options, answer and explanation.',
+      '<strong>UI:</strong> Build quiz container, question, options, buttons and results screen.',
+      '<strong>Logic:</strong> Implement navigation, answer checking and scoring.',
+      '<strong>State:</strong> Manage quiz state and persist best score.',
+      '<strong>Polish:</strong> Add animations, accessibility and error handling.',
+    ],
+    completionCriteria: [
+      'All questions render correctly',
+      'Scoring is accurate and displayed clearly',
+      'Explanations shown for answers',
+      'Best score persists across page reloads',
+      'Works without external libraries',
+      'Keyboard accessible controls',
+    ],
+    resources: `<p>Review <a href="lesson.html?course=js&id=js-11">Functions in Depth</a>, <a href="lesson.html?course=js&id=js-17">DOM Manipulation</a> and <a href="lesson.html?course=js&id=js-18">Events</a>.</p>`,
+  },
+  {
+    id: 'proj-task-tracker',
+    title: 'Task Tracker with Persistence',
+    summary: 'Build a full-featured task manager with add/edit/complete/filter, localStorage and clean UI.',
+    level: 'Advanced',
+    levelBadge: 'PRJ',
+    difficulty: 'Advanced',
+    focus: 'HTML · CSS · JavaScript',
+    estimatedTime: '5–8 hours',
+    overview: `<p>Create a production-style task tracker with CRUD operations, filters, due dates, and persistence. Focus on clean architecture and good UX.</p>`,
+    requirements: [
+      'Add new tasks with title and optional due date',
+      'Mark tasks complete/incomplete and delete tasks',
+      'Edit existing tasks inline or via modal',
+      'Filter by All/Active/Completed',
+      'Count of active tasks displayed',
+      'Persist all data to localStorage',
+      'Empty state when no tasks match filter',
+    ],
+    steps: [
+      '<strong>Structure:</strong> Design data model (array of task objects).',
+      '<strong>UI:</strong> Build form, task list, filters and stats.',
+      '<strong>CRUD:</strong> Implement add, toggle, edit, delete operations.',
+      '<strong>Persistence:</strong> Save/load from localStorage on changes.',
+      '<strong>Refine:</strong> Add validation, keyboard support and animations.',
+    ],
+    completionCriteria: [
+      'All CRUD operations work correctly',
+      'Data persists after refresh',
+      'Filters update list correctly',
+      'Input validation prevents empty tasks',
+      'Accessible form controls and buttons',
+      'No console errors',
+    ],
+    resources: `<p>Review <a href="lesson.html?course=js&id=js-6">Arrays &amp; Objects</a>, <a href="lesson.html?course=js&id=js-18">Events</a> and <a href="lesson.html?course=js&id=js-16">DOM Selection</a>.</p>`,
+  },
+];
+
+/* Add the expanded project path and keep the list ordered by difficulty. */
+PROJECTS.push(...EXTRA_PROJECTS);
+
+const PROJECT_DIFFICULTY_ORDER = {
+  Beginner: 0,
+  Intermediate: 1,
+  'Intermediate-Advanced': 2,
+  Advanced: 3,
+};
+
+PROJECTS.sort(
+  (a, b) => (PROJECT_DIFFICULTY_ORDER[a.difficulty] ?? 99) - (PROJECT_DIFFICULTY_ORDER[b.difficulty] ?? 99)
+);
+
+export function getProject(id) {
+  return PROJECTS.find((p) => p.id === id) || null;
+}
+
+/** All projects that belong to a given course focus, e.g. "JavaScript". */
+export function getProjectsForCourse(courseId) {
+  const label = { html: 'HTML', css: 'CSS', js: 'JavaScript' }[courseId];
+  if (!label) return [];
+  return PROJECTS.filter((project) => String(project.focus).includes(label));
+}

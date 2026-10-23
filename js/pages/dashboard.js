@@ -4,7 +4,7 @@
  */
 
 import { el, must, showToast } from '../ui.js';
-import { COURSES, ALL_LESSONS } from '../data.js';
+import { COURSES, ALL_LESSONS, PROJECTS } from '../data.js';
 import { initAuth, getCurrentUser, authMode, signOut } from '../supabase-client.js';
 import {
   loadProgress,
@@ -28,6 +28,7 @@ export async function init() {
   renderUser(user);
   renderStats();
   renderCourseProgress();
+  renderProjects();
   renderContinueLearning();
 
   const signOutButton = must('#sign-out-button');
@@ -109,6 +110,28 @@ function renderCourseProgress() {
         className: 'btn btn-outline',
         text: percent > 0 ? 'Keep going →' : 'Start course →',
         attrs: { href: `course.html?id=${course.id}`, style: 'margin-top:0.75rem' },
+      }),
+    ]));
+  }
+}
+
+function renderProjects() {
+  const container = must('#dashboard-projects');
+  if (!container) return;
+  container.innerHTML = '';
+
+  for (const project of PROJECTS) {
+    container.append(el('div', { className: 'card project-card' }, [
+      el('h3', { text: project.title }),
+      el('p', { className: 'muted', text: project.summary }),
+      el('div', { className: 'project-meta' }, [
+        el('span', { className: 'project-pill neutral', text: project.level }),
+        el('span', { className: 'project-pill neutral', text: project.estimatedTime }),
+      ]),
+      el('a', {
+        className: 'btn btn-outline',
+        text: 'Open project →',
+        attrs: { href: `project.html?id=${project.id}` },
       }),
     ]));
   }

@@ -23,6 +23,7 @@ import { spawnSync } from 'node:child_process';
 import { COURSES, ALL_LESSONS, ALL_EXERCISES, PROJECTS, getCourse, getLesson, getProject, LESSON_COUNT, EXERCISE_COUNT } from '../js/data.js';
 import { gradeExercise, gradeCode, referenceAnswers, normalizeAnswer, passingScore } from '../js/grading.js';
 import { searchLessons, highlightTerms, buildIndex } from '../js/search.js';
+import { buildAuthRedirectUrl, resolveAuthOrigin } from '../js/supabase-client.js';
 import {
   emptyProgress,
   recordExerciseScore,
@@ -285,7 +286,60 @@ check('merge keeps the better local timestamp', merged.completed['test-lesson-1'
 check('merge adds remote scores', merged.scores['ex-test-2'].best === 90);
 check('empty progress shape is valid', emptyProgress().completed && emptyProgress().scores);
 
-/* ---------------- 8. HTML links and assets ---------------- */
+/* ---------------- 8. auth redirect URLs ---------------- */
+section('Auth redirect URLs');
+
+const PRODUCTION_ORIGIN = 'https://codelearn-rho.vercel.app';
+const LOCAL_ORIGIN = 'http://localhost:8000';
+
+check('password reset redirects to the production update page',
+  buildAuthRedirectUrl('/update-password.html', PRODUCTION_ORIGIN) ===
+    `${PRODUCTION_ORIGIN}/update-password.html`);
+check('email confirmation redirects to the production login page',
+  buildAuthRedirectUrl('/login.html?message=confirmation_success', PRODUCTION_ORIGIN) ===
+    `${PRODUCTION_ORIGIN}/login.html?message=confirmation_success`);
+check('the same redirect helper preserves local development origins',
+  buildAuthRedirectUrl('/update-password.html', LOCAL_ORIGIN) ===
+    `${LOCAL_ORIGIN}/update-password.html`);
+check('production origins are used exactly as provided',
+  resolveAuthOrigin(PRODUCTION_ORIGIN) === PRODUCTION_ORIGIN);
+check('local development origins are used exactly as configured',
+  resolveAuthOrigin(LOCAL_ORIGIN) === LOCAL_ORIGIN);
+check('other localhost ports normalise to the configured dev origin',
+  resolveAuthOrigin('http://localhost:4173') === LOCAL_ORIGIN);
+check('127.0.0.1 also normalises to the configured dev origin',
+  resolveAuthOrigin('http://127.0.0.1:4173') === LOCAL_ORIGIN);
+check('non-http(s) origins are rejected',
+  throws(() => resolveAuthOrigin('file:///home/user/index.html')));
+check('auth redirects reject protocol-relative external URLs',
+  throws(() => buildAuthRedirectUrl('//evil.example/update-password.html', PRODUCTION_ORIGIN)));
+check('auth redirects reject absolute external URLs',
+  throws(() => buildAuthRedirectUrl('https://evil.example/', PRODUCTION_ORIGIN)));
+
+const authClientSource = readFileSync(join(ROOT, 'js/supabase-client.js'), 'utf8');
+
+function throws(fn) {
+  try {
+    fn();
+    return false;
+  } catch {
+    return true;
+  }
+}
+
+const localOriginLiterals =
+  authClientSource.match(/https?:\/\/(?:localhost|127\.0\.0\.1):\d+/g) || [];
+check('auth code only uses the approved local development origin',
+  localOriginLiterals.length === 1 && localOriginLiterals[0] === LOCAL_ORIGIN,
+  localOriginLiterals.join(', '));
+check('signUp sends an emailRedirectTo on the current site',
+  /signUp\s*\(\{[\s\S]*?emailRedirectTo:\s*authRedirectUrl\(/.test(authClientSource));
+check('password reset builds its redirect from the current site',
+  /const redirectTo = authRedirectUrl\(AUTH_REDIRECT_PATHS\.updatePassword\);/.test(authClientSource));
+check('resetPasswordForEmail receives the computed redirectTo',
+  /resetPasswordForEmail\(email, \{ redirectTo \}\)/.test(authClientSource));
+
+/* ---------------- 9. HTML links and assets ---------------- */
 section('HTML links and assets');
 
 const htmlFiles = readdirSync(ROOT).filter((name) => name.endsWith('.html'));

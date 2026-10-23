@@ -34,6 +34,67 @@ let startPromise = null;
 let recoverySession = false;
 const listeners = [];
 
+const AUTH_REDIRECT_PATHS = {
+  updatePassword: '/update-password.html',
+  confirmEmail: '/login.html?message=confirmation_success',
+};
+
+const LOCAL_AUTH_ORIGIN = 'http://localhost:8000';
+
+/**
+ * Resolve the origin that Supabase should send users back to.
+ *
+ * Production and preview deployments use the origin that served the page.
+ * Local development is normalised to the configured dev server origin so a
+ * stray local port can never leak into a reset email.
+ */
+export function resolveAuthOrigin(origin) {
+  const value =
+    origin || (typeof window !== 'undefined' ? window.location.origin : '');
+  if (!value) {
+    throw new Error('Cannot resolve an auth origin without a site origin.');
+  }
+
+  const parsed = new URL(value);
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw new Error('Auth redirects require an http(s) origin.');
+  }
+
+  const hostname = parsed.hostname.toLowerCase();
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return LOCAL_AUTH_ORIGIN;
+  }
+
+  return parsed.origin;
+}
+
+/**
+ * Build an absolute redirect URL for an internal auth page.
+ *
+ * The origin is passed in explicitly so this can be unit tested in Node.
+ * Only same-site paths are accepted, so this can never be used as an open
+ * redirect even if a caller passes untrusted input.
+ */
+export function buildAuthRedirectUrl(path, origin) {
+  const value = String(path || '');
+  if (!value.startsWith('/') || value.startsWith('//')) {
+    throw new Error('Auth redirect paths must be internal paths beginning with "/".');
+  }
+
+  return new URL(value, resolveAuthOrigin(origin)).href;
+}
+
+/** Redirect URL on the current site (production, preview or local dev). */
+export function authRedirectUrl(path) {
+  return buildAuthRedirectUrl(path, window.location.origin);
+}
+
+function recoveryLinkInUrl() {
+  if (typeof window === 'undefined') return false;
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  return hash.get('type') === 'recovery';
+}
+
 /** True when a real Supabase project is configured and connected. */
 export function isSupabaseMode() {
   return mode === 'supabase';
@@ -77,6 +138,9 @@ async function start() {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
     });
     mode = 'supabase';
+
+    // Detect recovery links before supabase-js consumes and clears the hash.
+    if (recoveryLinkInUrl()) recoverySession = true;
 
     // Pick up an existing session (also processes ?code= / #access_token= links
     // sent back by an email confirmation or password recovery).
@@ -165,7 +229,10 @@ export async function signUp({ email, password, displayName }) {
     const { data, error } = await client.auth.signUp({
       email,
       password,
-      options: { data: { display_name: displayName || '' } },
+      options: {
+        data: { display_name: displayName || '' },
+        emailRedirectTo: authRedirectUrl(AUTH_REDIRECT_PATHS.confirmEmail),
+      },
     });
     if (error) return { error: friendlyError(error) };
     // When email confirmation is enabled, no session is returned yet.
@@ -219,9 +286,8 @@ export async function sendPasswordReset(email) {
     };
   }
 
-  const { error } = await client.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/update-password.html',
-  });
+  const redirectTo = authRedirectUrl(AUTH_REDIRECT_PATHS.updatePassword);
+  const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo });
   if (error) return { error: friendlyError(error) };
   return {};
 }
@@ -266,6 +332,8 @@ export function friendlyError(error) {
     [/invalid login credentials/i, 'Wrong email or password. Check both fields and try again.'],
     [/email not confirmed/i, 'Please confirm your email first. Open the confirmation link we sent you.'],
     [/user already registered/i, 'This email is already registered. Try logging in instead.'],
+    [/email link is invalid|invalid.*token|token.*expired|otp.*expired/i, 'That email link has expired or was already used. Request a new one.'],
+    [/auth session missing|session.*missing/i, 'Your reset link has expired or is no longer valid. Request a new one.'],
     [/password should be at least/i, 'Password is too short — use at least 6 characters.'],
     [/unable to validate email/i, 'That email address does not look valid.'],
     [/rate limit/i, 'Too many attempts. Please wait a minute and try again.'],

@@ -14,6 +14,7 @@ import {
   sendPasswordReset,
   updateUserPassword,
   getCurrentUser,
+  isRecoverySession,
 } from '../supabase-client.js';
 import { pullRemoteProgress } from '../progress.js';
 
@@ -53,25 +54,46 @@ function showModeNotice() {
   }
 }
 
-/** Show ?message= / ?error= parameters coming back from Supabase emails. */
+/**
+ * Read a callback parameter from either the query string or the URL hash.
+ * Supabase can return errors in the hash before it clears the token data.
+ */
+function getCallbackParam(name) {
+  const search = new URLSearchParams(window.location.search);
+  if (search.has(name)) return search.get(name);
+
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  return hash.get(name);
+}
+
+/** Show messages / errors coming back from Supabase email links. */
 function handleAuthMessages() {
-  const message = getParam('message');
-  const error = getParam('error');
-  const errorDescription = getParam('error_description');
+  const message = getCallbackParam('message');
+  const error = getCallbackParam('error');
+  const errorCode = getCallbackParam('error_code');
+  const errorDescription = getCallbackParam('error_description');
 
   if (message === 'check_email' || message === 'confirmation_success') {
+    const signedIn = Boolean(getCurrentUser());
     showFormMessage(
       'success',
       message === 'confirmation_success'
-        ? 'Email confirmed — you can log in now.'
+        ? signedIn
+          ? 'Email confirmed — you are signed in and ready to learn.'
+          : 'Email confirmed — you can log in now.'
         : 'Almost there! Check your inbox and click the confirmation link we just sent.'
     );
   }
   if (message === 'recovery') {
     showFormMessage('info', 'Enter your new password below to finish resetting it.');
   }
-  if (error) {
-    const text = errorDescription || decodeURIComponent(error).replace(/_/g, ' ');
+  if (error || errorCode) {
+    let text = errorDescription || errorCode || error || 'unknown error';
+    try {
+      text = decodeURIComponent(text).replace(/_/g, ' ');
+    } catch {
+      /* keep the raw message if it is not URI-encoded */
+    }
     showFormMessage('error', `That link did not work: ${text}. Request a new one below.`);
   }
 }
@@ -285,6 +307,22 @@ function initUpdatePassword() {
         'config.js (see README.md), then reopen the link from your reset email.'
     );
     return;
+  }
+
+  // Supabase exchanges the recovery link for a short-lived session. Without
+  // that session there is no user to update, so explain what to do instead.
+  if (!getCurrentUser()) {
+    form.hidden = true;
+    showFormMessage(
+      'error',
+      'Open the password reset link from your email to choose a new password. ' +
+        'If the link has expired, request a new one.'
+    );
+    return;
+  }
+
+  if (isRecoverySession()) {
+    showFormMessage('info', 'Reset link verified. Choose a new password below.');
   }
 
   form.addEventListener('submit', async (event) => {

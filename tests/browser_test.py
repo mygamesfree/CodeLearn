@@ -260,6 +260,31 @@ def main():
         page.wait_for_selector('#search-modal', state='hidden', timeout=2000)
         check('escape closes search modal', page.locator('#search-modal[hidden]').count() == 1)
 
+        # ---------- auth redirects ----------
+        print('\n== Auth redirect URLs ==')
+        page.goto(f'{BASE}/index.html')
+        redirects = page.evaluate("""async () => {
+            const { buildAuthRedirectUrl } = await import('/js/supabase-client.js');
+            return {
+                production: buildAuthRedirectUrl('/update-password.html', 'https://codelearn-rho.vercel.app'),
+                confirmation: buildAuthRedirectUrl('/login.html?message=confirmation_success', 'https://codelearn-rho.vercel.app'),
+                local: buildAuthRedirectUrl('/update-password.html', 'http://localhost:8000'),
+                alternateLocal: buildAuthRedirectUrl('/update-password.html', 'http://localhost:4173'),
+            };
+        }""")
+        check('reset redirect uses production origin',
+              redirects['production'] == 'https://codelearn-rho.vercel.app/update-password.html',
+              redirects['production'])
+        check('confirmation redirect uses production origin',
+              redirects['confirmation'] == 'https://codelearn-rho.vercel.app/login.html?message=confirmation_success',
+              redirects['confirmation'])
+        check('redirect helper keeps local origin',
+              redirects['local'] == 'http://localhost:8000/update-password.html',
+              redirects['local'])
+        check('redirect helper normalises other local ports',
+              redirects['alternateLocal'] == 'http://localhost:8000/update-password.html',
+              redirects['alternateLocal'])
+
         # ---------- auth (demo mode) ----------
         print('\n== Auth in demo mode ==')
         page.goto(f'{BASE}/login.html')

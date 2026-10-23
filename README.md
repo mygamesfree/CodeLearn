@@ -94,12 +94,23 @@ and the auth pages show a visible warning. Progress, lessons and exercises work 
    secret in frontend code.
 
 4. **Configure auth URLs** — *Authentication → URL Configuration*:
-   - Site URL: `http://localhost:8000` (and your production URL later)
-   - Redirect URLs: add `http://localhost:8000/update-password.html` and
-     `http://localhost:8000/login.html`
+   - Site URL: `https://codelearn-rho.vercel.app`
+   - Redirect URLs: add both your production and local development pages:
+     - `https://codelearn-rho.vercel.app/login.html`
+     - `https://codelearn-rho.vercel.app/update-password.html`
+     - `http://localhost:8000/login.html`
+     - `http://localhost:8000/update-password.html`
+
+   The app builds email redirects from the origin that served the page, so the
+   production site sends users to production and local development stays local.
+   Supabase only honours redirects that match the allowed URLs above. If the
+   current origin is not allowed, Supabase falls back to the **Site URL**, so
+   keep the Site URL set to the production site and add the local dev origin
+   to the Redirect URLs list.
 
 5. **Email confirmation** — by default Supabase sends a confirmation link after sign-up.
-   The site handles the `?message=check_email` and confirmation redirects automatically.
+   The site sends confirmation links back to `login.html` and handles the
+   `?message=check_email` and `?message=confirmation_success` feedback automatically.
    For quick local testing you can disable it under *Authentication → Providers → Email*.
 
 6. Restart the server and reload — the demo-mode warning disappears and accounts are real.
